@@ -32,9 +32,21 @@ jobs:
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
           cache: maven
 
-      - name: Deploy to OSSRH and release staging repo
+      - name: Create minimal settings.xml (override to avoid encrypted password errors)
         run: |
-          mvn clean deploy nexus-staging:close nexus-staging:release -P release -DskipTests -Dgpg.passphrase="${{ secrets.GPG_PASSPHRASE }}"
-        env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          mkdir -p ~/.m2
+          cat > ~/.m2/settings.xml <<EOF
+  <settings>
+  <servers>
+  <server>
+  <id>ossrh</id>
+  <username>${{ secrets.OSSRH_USERNAME }}</username>
+  <password>${{ secrets.OSSRH_PASSWORD }}</password>
+  </server>
+  </servers>
+  </settings>
+  EOF
+
+- name: Deploy to OSSRH and release staging repo
+  run: |
+    mvn clean deploy nexus-staging:close nexus-staging:release -P release -DskipTests -Dgpg.passphrase="${{ secrets.GPG_PASSPHRASE }}"
