@@ -9,24 +9,27 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to OSSRH
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Java
+      - name: Import GPG Key (manual debug step)
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | base64 --decode > gpg.key
+          gpg --batch --import gpg.key
+
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 21
+          cache: maven
           server-id: ossrh
           server-username: OSSRH_USERNAME
           server-password: OSSRH_PASSWORD
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
-          cache: maven
 
       - name: Deploy to Maven Central
         run: mvn clean deploy -P release -Dgpg.passphrase="${{ secrets.GPG_PASSPHRASE }}" -DskipTests
