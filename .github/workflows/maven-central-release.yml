@@ -35,18 +35,16 @@ jobs:
       - name: Create minimal settings.xml (override to avoid encrypted password errors)
         run: |
           mkdir -p ~/.m2
-          cat > ~/.m2/settings.xml <<EOF
-  <settings>
-  <servers>
-  <server>
-  <id>ossrh</id>
-  <username>${{ secrets.OSSRH_USERNAME }}</username>
-  <password>${{ secrets.OSSRH_PASSWORD }}</password>
-  </server>
-  </servers>
-  </settings>
-  EOF
+          echo "<settings>" > ~/.m2/settings.xml
+          echo "  <servers>" >> ~/.m2/settings.xml
+          echo "    <server>" >> ~/.m2/settings.xml
+          echo "      <id>ossrh</id>" >> ~/.m2/settings.xml
+          echo "      <username>${{ secrets.OSSRH_USERNAME }}</username>" >> ~/.m2/settings.xml
+          echo "      <password>${{ secrets.OSSRH_PASSWORD }}</password>" >> ~/.m2/settings.xml
+          echo "    </server>" >> ~/.m2/settings.xml
+          echo "  </servers>" >> ~/.m2/settings.xml
+          echo "</settings>" >> ~/.m2/settings.xml
 
-- name: Deploy to OSSRH and release staging repo
-  run: |
-    mvn clean deploy nexus-staging:close nexus-staging:release -P release -DskipTests -Dgpg.passphrase="${{ secrets.GPG_PASSPHRASE }}"
+      - name: Deploy to OSSRH and release staging repo
+        run: |
+          mvn clean deploy nexus-staging:close nexus-staging:release -P release -DskipTests -Dgpg.passphrase="${{ secrets.GPG_PASSPHRASE }}"
