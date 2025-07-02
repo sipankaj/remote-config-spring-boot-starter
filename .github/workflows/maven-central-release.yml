@@ -5,34 +5,37 @@ on:
     branches:
       - master
     tags:
-      - 'v*'
+      - 'v*'   # Triggers only on tags like v1.0.0, v2.1.3, etc.
 
 jobs:
   deploy:
+    name: Deploy to Maven Central
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Import GPG Key (manual debug step)
+      - name: Setup GPG manually
         run: |
           echo "${{ secrets.GPG_PRIVATE_KEY }}" | base64 --decode > gpg.key
           gpg --batch --import gpg.key
+          gpg --list-secret-keys
 
-      - name: Setup Java
+      - name: Set up Java and Maven
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 21
-          cache: maven
-          server-id: ossrh
+          server-id: ossrh                         # must match <server> ID in your pom.xml
           server-username: OSSRH_USERNAME
           server-password: OSSRH_PASSWORD
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          cache: maven
 
-      - name: Deploy to Maven Central
-        run: mvn clean deploy -P release -Dgpg.passphrase="${{ secrets.GPG_PASSPHRASE }}" -DskipTests
+      - name: Deploy to OSSRH
+        run: |
+          mvn clean deploy -P release -DskipTests -Dgpg.passphrase="${{ secrets.GPG_PASSPHRASE }}"
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
