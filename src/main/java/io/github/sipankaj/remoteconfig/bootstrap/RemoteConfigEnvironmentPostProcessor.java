@@ -1,14 +1,14 @@
-package com.sipankaj.remoteconfig.bootstrap;
+package io.github.sipankaj.remoteconfig.bootstrap;
 
-import com.sipankaj.remoteconfig.RemoteConfigType;
-import com.sipankaj.remoteconfig.loader.implementation.GcsConfigLoader;
-import com.sipankaj.remoteconfig.loader.implementation.SftpConfigLoader;
-import com.sipankaj.remoteconfig.model.GcsConfigProperties;
-import com.sipankaj.remoteconfig.model.SftpConfigProperties;
+import io.github.sipankaj.remoteconfig.RemoteConfigType;
+import io.github.sipankaj.remoteconfig.loader.implementation.GcsConfigLoader;
+import io.github.sipankaj.remoteconfig.loader.implementation.SftpConfigLoader;
+import io.github.sipankaj.remoteconfig.model.GcsConfigProperties;
+import io.github.sipankaj.remoteconfig.model.SftpConfigProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.core.env.ConfigurableEnvironment;
-import com.sipankaj.remoteconfig.annotation.EnableRemoteConfig;
+import io.github.sipankaj.remoteconfig.annotation.EnableRemoteConfig;
 
 public class RemoteConfigEnvironmentPostProcessor implements EnvironmentPostProcessor {
 

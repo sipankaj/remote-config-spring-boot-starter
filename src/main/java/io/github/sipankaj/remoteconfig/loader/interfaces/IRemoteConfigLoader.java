@@ -1,4 +1,4 @@
-package com.sipankaj.remoteconfig.loader.interfaces;
+package io.github.sipankaj.remoteconfig.loader.interfaces;
 
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;

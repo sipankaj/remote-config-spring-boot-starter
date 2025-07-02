@@ -1,4 +1,4 @@
-package com.sipankaj.remoteconfig.annotation;
+package io.github.sipankaj.remoteconfig.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

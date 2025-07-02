@@ -1,15 +1,13 @@
-package com.sipankaj.remoteconfig.loader.implementation;
+package io.github.sipankaj.remoteconfig.loader.implementation;
 
-import com.sipankaj.remoteconfig.loader.interfaces.IRemoteConfigLoader;
-import com.sipankaj.remoteconfig.model.SftpConfigProperties;
+import io.github.sipankaj.remoteconfig.loader.interfaces.IRemoteConfigLoader;
+import io.github.sipankaj.remoteconfig.model.SftpConfigProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.integration.file.remote.session.Session;
 import org.springframework.integration.file.remote.session.SessionFactory;
 import org.springframework.integration.sftp.session.DefaultSftpSessionFactory;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
 import java.util.*;

@@ -1,13 +1,11 @@
-package com.sipankaj.remoteconfig.loader.implementation;
+package io.github.sipankaj.remoteconfig.loader.implementation;
 
 import com.google.cloud.storage.*;
-import com.sipankaj.remoteconfig.loader.interfaces.IRemoteConfigLoader;
-import com.sipankaj.remoteconfig.model.GcsConfigProperties;
-import lombok.extern.slf4j.Slf4j;
+import io.github.sipankaj.remoteconfig.loader.interfaces.IRemoteConfigLoader;
+import io.github.sipankaj.remoteconfig.model.GcsConfigProperties;
 import org.springframework.core.env.ConfigurableEnvironment;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.*;
 

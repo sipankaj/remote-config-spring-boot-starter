@@ -28,8 +28,9 @@ Add the following to your `pom.xml`:
 ```
 ### 2. Enable Remote Config
 Annotate your main Spring Boot application class:
+
 ```java
-import com.sipankaj.remoteconfig.annotation.EnableRemoteConfig;
+import annotation.io.github.sipankaj.remoteconfig.EnableRemoteConfig;
 
 @EnableRemoteConfig
 @SpringBootApplication

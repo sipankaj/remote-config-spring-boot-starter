@@ -2,4 +2,4 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 com.sipankaj.remoteconfig.bootstrap.RemoteConfig
 
 org.springframework.boot.env.EnvironmentPostProcessor=\
-com.sipankaj.remoteconfig.bootstrap.RemoteConfigEnvironmentPostProcessor
+bootstrap.io.github.sipankaj.remoteconfig.RemoteConfigEnvironmentPostProcessor

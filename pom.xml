@@ -5,12 +5,13 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.sipankaj</groupId>
+    <groupId>io.github.sipankaj</groupId>
     <artifactId>remote-config-spring-boot-starter</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
     <name>Remote Config Spring Boot Starter</name>
     <description>Spring Boot starter to load config from GCS, S3, or SFTP using annotation</description>
+    <url>https://github.com/sipankaj/remote-config-spring-boot-starter</url>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -18,6 +19,40 @@
         <version>3.2.5</version>
         <relativePath/>
     </parent>
+
+    <licenses>
+        <license>
+            <name>The MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>sipankaj</id>
+            <name>Pankaj Singh</name>
+            <email>pankajsingh.nitb@gmail.com</email>
+            <url>https://github.com/sipankaj</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/sipankaj/remote-config-spring-boot-starter</url>
+        <connection>scm:git:git://github.com/sipankaj/remote-config-spring-boot-starter.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/sipankaj/remote-config-spring-boot-starter.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <properties>
         <java.version>21</java.version>
@@ -63,6 +98,7 @@
 
     <build>
         <plugins>
+            <!-- Java compiler -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
@@ -71,7 +107,62 @@
                     <target>21</target>
                 </configuration>
             </plugin>
+
+            <!-- GPG signing -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Attach sources -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Attach javadocs -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.4.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
 
 </project>

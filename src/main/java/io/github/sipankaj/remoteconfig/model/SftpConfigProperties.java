@@ -1,4 +1,4 @@
-package com.sipankaj.remoteconfig.model;
+package io.github.sipankaj.remoteconfig.model;
 
 public record SftpConfigProperties(
         String host,

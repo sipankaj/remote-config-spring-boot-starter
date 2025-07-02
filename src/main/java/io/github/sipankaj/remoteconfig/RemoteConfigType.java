@@ -1,4 +1,4 @@
-package com.sipankaj.remoteconfig;
+package io.github.sipankaj.remoteconfig;
 
 public enum RemoteConfigType {
     GCS, SFTP
