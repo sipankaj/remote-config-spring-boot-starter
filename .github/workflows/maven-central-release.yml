@@ -2,8 +2,6 @@ name: Publish to Maven Central
 
 on:
   push:
-    branches:
-      - release/*  # e.g. release/1.0.0
     tags:
       - 'r*'  # e.g. r1.0.0
 
