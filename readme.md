@@ -1,32 +1,46 @@
-# Remote Config Spring Boot Starter
 
-A Spring Boot starter to load configuration files from remote sources (GCS or SFTP) during application bootstrap, before your main configuration is loaded.
+# 🌍 Remote Config Spring Boot Starter
 
-## What is this library?
+A Spring Boot 3.x **starter library** that loads configuration files from **remote sources** such as **Google Cloud Storage (GCS)** or **SFTP**, injecting them into the Spring `Environment` **before local configuration is loaded**.
 
-This library allows your Spring Boot application to fetch configuration files (YAML or properties) from remote locations such as Google Cloud Storage (GCS) or SFTP servers. It injects these remote configurations into the Spring Environment very early in the startup process, making them available as if they were local configuration files.
+---
 
-## Use Cases
+## 📖 What is this library?
 
-- Centralized configuration management for multiple deployments.
-- Securely store sensitive configuration outside the application package.
-- Dynamically update configuration without rebuilding or redeploying the application.
-- Support for cloud-native and containerized environments.
+This library lets your Spring Boot application securely and dynamically load `.yml` or `.properties` configuration files from remote locations **during startup**, enabling:
 
-## How to Use
+- Centralized config management
+- Externalized secrets
+- Environment-specific configuration
+- CI/CD-driven dynamic configuration injection
 
-### 1. Add Dependency
+---
 
-Add the following to your `pom.xml`:
+## ✅ Use Cases
+
+- 🔐 Securely store config/secrets outside the packaged app
+- 🚀 Dynamically inject config in Kubernetes, Docker, or cloud platforms
+- 🔁 Reuse config across environments without duplication
+- 🧩 Simplify CI/CD pipelines with remote config injection
+
+---
+
+## ⚙️ How to Use
+
+### 1️⃣ Add Dependency
 
 ```xml
 <dependency>
-    <groupId>com.sipankaj</groupId>
-    <artifactId>remote-config-spring-boot-starter</artifactId>
-    <version>1.0-SNAPSHOT</version>
+  <groupId>com.sipankaj</groupId>
+  <artifactId>remote-config-spring-boot-starter</artifactId>
+  <version>1.0-SNAPSHOT</version>
 </dependency>
-```
-### 2. Enable Remote Config
+````
+
+---
+
+### 2️⃣ Enable Remote Config
+
 Annotate your main Spring Boot application class:
 
 ```java
@@ -40,33 +54,79 @@ public class MyApplication {
     }
 }
 ```
-### 3. Provide Remote Config Properties
-Set the following environment variables (recommended for early loading):
 
-For SFTP
-- REMOTE_CONFIG_TYPE=SFTP
-- REMOTE_CONFIG_BUCKET_OR_HOST=<sftp-host>
-- REMOTE_CONFIG_PORT=<sftp-port>
-- REMOTE_CONFIG_USERNAME=<username>
-- REMOTE_CONFIG_PASSWORD=<password> or REMOTE_CONFIG_PRIVATE_KEY_PATH=<path> (and optionally REMOTE_CONFIG_PRIVATE_KEY_PASSPHRASE=<passphrase>)
-- REMOTE_CONFIG_FILE=<remote-config-file-path>
+---
 
-For GCS
-- REMOTE_CONFIG_TYPE=GCS
-- REMOTE_CONFIG_BUCKET_OR_HOST=<gcs-bucket>
-- REMOTE_CONFIG_FILE=<gcs-file-path>
+### 3️⃣ Provide Remote Config Properties
 
+Set the following **environment variables** (required for early loading):
 
-### 4. How it works
-- The RemoteConfigEnvironmentPostProcessor checks for the @EnableRemoteConfig annotation.
-- It reads configuration from environment variables.
-- It loads the remote file and injects its properties into the Spring Environment before the main application configuration is processed.
+#### 🔒 For SFTP:
 
-### 5. UML Diagram
+| Variable                               | Description                    |
+| -------------------------------------- | ------------------------------ |
+| `REMOTE_CONFIG_TYPE`                   | Must be `SFTP`                 |
+| `REMOTE_CONFIG_BUCKET_OR_HOST`         | Hostname of the SFTP server    |
+| `REMOTE_CONFIG_PORT`                   | SFTP port (usually `22`)       |
+| `REMOTE_CONFIG_USERNAME`               | SFTP username                  |
+| `REMOTE_CONFIG_PASSWORD`               | (Optional) SFTP password       |
+| `REMOTE_CONFIG_PRIVATE_KEY_PATH`       | (Optional) Path to private key |
+| `REMOTE_CONFIG_PRIVATE_KEY_PASSPHRASE` | (Optional) Passphrase for key  |
+| `REMOTE_CONFIG_FILE`                   | Path to remote config file     |
+
+#### ☁️ For GCS:
+
+| Variable                         | Description                       |
+| -------------------------------- | --------------------------------- |
+| `REMOTE_CONFIG_TYPE`             | Must be `GCS`                     |
+| `REMOTE_CONFIG_BUCKET_OR_HOST`   | GCS bucket name                   |
+| `REMOTE_CONFIG_FILE`             | Path to config file in the bucket |
+| `GOOGLE_APPLICATION_CREDENTIALS` | Path to GCP service account key   |
+
+> ✅ Use environment variables instead of `application.yml` to ensure early loading.
+
+---
+
+### 4️⃣ How it Works
+
+1. `RemoteConfigEnvironmentPostProcessor` is triggered very early in Spring's bootstrap phase.
+2. It checks for the `@EnableRemoteConfig` annotation.
+3. Reads environment variables to detect remote config type and location.
+4. Loads the remote file using GCS SDK or SFTP.
+5. Parses the file as YAML/properties and adds it to the Spring `Environment`.
+
+---
+
+### 5️⃣ UML Diagram
 
 ![UML Diagram](/docs/remoteconfig.png)
 
-### 6. Notes
-Use environment variables for remote config properties to ensure they are available before Spring loads local configuration.
-For debugging early in the lifecycle, use System.out.println as logging may not be initialized.
-Supports both YAML and properties files.
+---
+
+## 📌 Notes
+
+* 🧪 Use `System.out.println` for logging/debugging during bootstrap (as `Logger` may not be ready).
+* ☁️ Supports both `.yml` and `.properties` formats.
+* 💡 Best practice: provide fallback local config in case remote config fails.
+* 🔐 Credentials should be injected securely via environment or secret managers.
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+## 🙌 Contributions
+
+PRs and issues welcome!
+Future support for:
+
+* AWS S3 or Secrets Manager
+* Azure Blob Storage
+* HashiCorp Vault
+
+---
+
+> Built with care by [@sipankaj](https://github.com/sipankaj) and powered by Spring Boot 💛
