@@ -7,7 +7,7 @@
 
     <groupId>io.github.sipankaj</groupId>
     <artifactId>remote-config-spring-boot-starter</artifactId>
-    <version>${project.version}</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Remote Config Spring Boot Starter</name>
     <description>Spring Boot starter to load config from GCS, S3, or SFTP using annotation</description>
@@ -57,7 +57,7 @@
     </distributionManagement>
 
     <properties>
-        <java.version>21</java.version> <!-- change to 17 if needed -->
+        <java.version>17</java.version> <!-- change to 17 if needed -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 

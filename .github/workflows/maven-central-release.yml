@@ -2,10 +2,8 @@ name: Publish to Maven Central
 
 on:
   push:
-    branches:
-      - master
     tags:
-      - 'v*'  # e.g. v1.0.0
+      - 'r*'  # e.g. r1.0.0
 
 jobs:
   publish:
@@ -47,6 +45,12 @@ jobs:
           </settings>
           EOF
 
+      - name: Set version from Git tag
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          VERSION=${TAG#r}  # Remove 'r' prefix
+          echo "Using version: $VERSION"
+          mvn versions:set -DnewVersion=$VERSION
       - name: Deploy to OSSRH (manual close/release from UI)
         run: |
           mvn clean deploy -P release -DskipTests -Dgpg.passphrase="${{ secrets.GPG_PASSPHRASE }}"
