@@ -123,9 +123,8 @@ This project is licensed under the **MIT License**.
 PRs and issues welcome!
 Future support for:
 
-* AWS S3 or Secrets Manager
+* AWS S3
 * Azure Blob Storage
-* HashiCorp Vault
 
 ---
 
