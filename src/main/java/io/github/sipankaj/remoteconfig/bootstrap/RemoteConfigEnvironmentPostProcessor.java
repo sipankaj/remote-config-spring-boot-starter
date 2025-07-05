@@ -15,6 +15,7 @@ import org.springframework.vault.core.VaultTemplate;
 import org.springframework.vault.support.VaultResponse;
 import org.springframework.vault.config.EnvironmentVaultConfiguration;
 
+import java.net.URI;
 import java.util.Objects;
 
 public class RemoteConfigEnvironmentPostProcessor implements EnvironmentPostProcessor {
@@ -63,9 +64,13 @@ public class RemoteConfigEnvironmentPostProcessor implements EnvironmentPostProc
 
                         case "GCP" -> {
                             String projectId = env.getProperty("REMOTE_CONFIG_GCP_PROJECT");
-                            pass = readGcpSecret(projectId, "sftp-password");
-                            keyPath = readGcpSecret(projectId, "sftp-private-key-path");
-                            keyPhrase = readGcpSecret(projectId, "sftp-private-key-passphrase");
+                            String sftpPasswordSecret = env.getProperty("REMOTE_CONFIG_PASSWORD_SECRET");
+                            String sftpPrivateKeySecret = env.getProperty("REMOTE_CONFIG_PRIVATE_KEY_PATH_SECRET");
+                            String sftpKeyPassphraseSecret = env.getProperty("REMOTE_CONFIG_PRIVATE_KEY_PASSPHRASE_SECRET");
+
+                            pass = sftpPasswordSecret != null ? readGcpSecret(projectId, sftpPasswordSecret) : null;
+                            keyPath = sftpPrivateKeySecret != null ? readGcpSecret(projectId, sftpPrivateKeySecret) : null;
+                            keyPhrase = sftpKeyPassphraseSecret != null ? readGcpSecret(projectId, sftpKeyPassphraseSecret) : null;
                         }
 
                         case "VAULT" -> {
@@ -73,9 +78,13 @@ public class RemoteConfigEnvironmentPostProcessor implements EnvironmentPostProc
                             VaultTemplate vault = createVaultTemplate(env);
                             VaultResponse resp = vault.read(vaultPath);
                             if (resp != null && resp.getData() != null) {
-                                pass = (String) resp.getData().get("sftp-password");
-                                keyPath = (String) resp.getData().get("sftp-private-key-path");
-                                keyPhrase = (String) resp.getData().get("sftp-private-key-passphrase");
+                                String sftpPasswordSecret = env.getProperty("REMOTE_CONFIG_PASSWORD_SECRET");
+                                String sftpPrivateKeySecret = env.getProperty("REMOTE_CONFIG_PRIVATE_KEY_PATH_SECRET");
+                                String sftpKeyPassphraseSecret = env.getProperty("REMOTE_CONFIG_PRIVATE_KEY_PASSPHRASE_SECRET");
+
+                                pass = sftpPasswordSecret != null ? (String) resp.getData().get(sftpPasswordSecret) : null;
+                                keyPath = sftpPrivateKeySecret != null ? (String) resp.getData().get(sftpPrivateKeySecret) : null;
+                                keyPhrase = sftpKeyPassphraseSecret != null ? (String) resp.getData().get(sftpKeyPassphraseSecret) : null;
                             }
                         }
 
@@ -124,23 +133,15 @@ public class RemoteConfigEnvironmentPostProcessor implements EnvironmentPostProc
             AccessSecretVersionResponse response = client.accessSecretVersion(secretVersion);
             return response.getPayload().getData().toStringUtf8();
         } catch (Exception e) {
-            System.err.println("[RemoteConfig:GCP] Failed to fetch secret: " + secretId);
+            System.err.println("[RemoteConfig:GCP] Failed to fetch secret: " + secretId + " from project: " + projectId + ". Error: " + e.getMessage());
             return null;
         }
     }
 
     private VaultTemplate createVaultTemplate(ConfigurableEnvironment env) {
-        EnvironmentVaultConfiguration config = new EnvironmentVaultConfiguration() {
-            @Override
-            public String vaultToken() {
-                return Objects.requireNonNull(env.getProperty("VAULT_TOKEN"), "VAULT_TOKEN is missing");
-            }
-
-            @Override
-            public String vaultEndpoint() {
-                return Objects.requireNonNull(env.getProperty("VAULT_ADDR"), "VAULT_ADDR is missing");
-            }
-        };
-        return new VaultTemplate(config.vaultEndpointProvider(), new TokenAuthentication(config.vaultToken()));
+        String vaultAddr = Objects.requireNonNull(env.getProperty("VAULT_ADDR"), "VAULT_ADDR is missing");
+        String vaultToken = Objects.requireNonNull(env.getProperty("VAULT_TOKEN"), "VAULT_TOKEN is missing");
+        var endpoint = org.springframework.vault.client.VaultEndpoint.from(URI.create(vaultAddr));
+        return new VaultTemplate(endpoint, new TokenAuthentication(vaultToken));
     }
 }

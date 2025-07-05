@@ -107,13 +107,10 @@ REMOTE_CONFIG_PRIVATE_KEY_PASSPHRASE=passphrase
 REMOTE_CONFIG_CREDENTIAL_SOURCE=GCP
 REMOTE_CONFIG_GCP_PROJECT=my-gcp-project-id
 GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account.json
+REMOTE_CONFIG_PASSWORD_SECRET=sftp-password
+REMOTE_CONFIG_PRIVATE_KEY_PATH_SECRET=sftp-private-key-path
+REMOTE_CONFIG_PRIVATE_KEY_PASSPHRASE_SECRET=sftp-private-key-passphrase
 ```
-
-Expected secrets in Secret Manager:
-
-* `sftp-password`
-* `sftp-private-key-path` *(optional)*
-* `sftp-private-key-passphrase` *(optional)*
 
 #### Option 3: HashiCorp Vault
 
@@ -122,15 +119,11 @@ REMOTE_CONFIG_CREDENTIAL_SOURCE=VAULT
 REMOTE_CONFIG_VAULT_PATH=secret/data/remote-config
 VAULT_ADDR=https://vault.example.com
 VAULT_TOKEN=s.xxxxxx
+REMOTE_CONFIG_PASSWORD_SECRET=sftp-password
+REMOTE_CONFIG_PRIVATE_KEY_PATH_SECRET=sftp-private-key-path
+REMOTE_CONFIG_PRIVATE_KEY_PASSPHRASE_SECRET=sftp-private-key-passphrase
 ```
 
-Expected Vault keys:
-
-```yaml
-sftp-password: my-password
-sftp-private-key-path: /secrets/id_rsa
-sftp-private-key-passphrase: passphrase
-```
 
 ℹ️ The fallback order is: `REMOTE_CONFIG_CREDENTIAL_SOURCE` → `ENV`
 
