@@ -4,93 +4,96 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>io.github.sipankaj</groupId>
     <artifactId>remote-config-spring-boot-starter</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
+
     <name>Remote Config Spring Boot Starter</name>
-    <description>Spring Boot starter to load config from GCS, S3, or SFTP using annotation</description>
+    <description>Spring Boot starter to load config from GCS, SFTP, or other remote sources</description>
     <url>https://github.com/sipankaj/remote-config-spring-boot-starter</url>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.5</version>
-        <relativePath/>
-    </parent>
-
-    <licenses>
-        <license>
-            <name>The MIT License</name>
-            <url>https://opensource.org/licenses/MIT</url>
-        </license>
-    </licenses>
-
-    <developers>
-        <developer>
-            <id>sipankaj</id>
-            <name>Pankaj Singh</name>
-            <email>pankajsingh.nitb@gmail.com</email>
-            <url>https://github.com/sipankaj</url>
-        </developer>
-    </developers>
-
-    <scm>
-        <url>https://github.com/sipankaj/remote-config-spring-boot-starter</url>
-        <connection>scm:git:git://github.com/sipankaj/remote-config-spring-boot-starter.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/sipankaj/remote-config-spring-boot-starter.git</developerConnection>
-        <tag>HEAD</tag>
-    </scm>
-
-    <distributionManagement>
-        <repository>
-            <id>ossrh</id>
-            <name>OSSRH Releases</name>
-            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <name>OSSRH Snapshots</name>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
+    <!-- No parent used -->
     <properties>
-        <java.version>17</java.version> <!-- change to 17 if needed -->
+        <java.version>17</java.version>
+        <spring-boot.version>3.2.5</spring-boot.version> <!-- Used for development/testing -->
+        <google-cloud-storage.version>2.38.0</google-cloud-storage.version>
+        <aws-java-sdk.version>1.12.730</aws-java-sdk.version>
+        <google-cloud-secretmanager.version>2.33.0</google-cloud-secretmanager.version>
+        <spring-cloud-vault.version>3.2.0</spring-cloud-vault.version>
+        <snakeyaml.version>2.0</snakeyaml.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <!-- Allows users to override versions -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>3.2.5</version> <!-- or keep flexible via property -->
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
+        <!-- Core Spring Boot (no version) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>
+
+        <!-- Optional config processor -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
         </dependency>
+
+        <!-- GCS -->
         <dependency>
             <groupId>com.google.cloud</groupId>
             <artifactId>google-cloud-storage</artifactId>
-            <version>2.38.0</version>
+            <version>${google-cloud-storage.version}</version>
         </dependency>
+
+        <!-- AWS -->
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
-            <version>1.12.730</version>
+            <version>${aws-java-sdk.version}</version>
         </dependency>
+
+        <!-- GCP Secret Manager -->
         <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>2.0</version>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-secretmanager</artifactId>
+            <version>${google-cloud-secretmanager.version}</version>
         </dependency>
+
+        <!-- Vault (Spring Cloud) -->
+        <dependency>
+            <groupId>org.springframework.vault</groupId>
+            <artifactId>spring-vault-core</artifactId>
+            <version>${spring-cloud-vault.version}</version>
+        </dependency>
+
+        <!-- SFTP Support -->
         <dependency>
             <groupId>org.springframework.integration</groupId>
             <artifactId>spring-integration-sftp</artifactId>
             <version>6.2.2</version>
         </dependency>
+
+        <!-- YAML parsing -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>${snakeyaml.version}</version>
+        </dependency>
+
+        <!-- Optional Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -111,12 +114,46 @@
             </plugin>
         </plugins>
     </build>
+
+    <scm>
+        <url>https://github.com/sipankaj/remote-config-spring-boot-starter</url>
+        <connection>scm:git:git://github.com/sipankaj/remote-config-spring-boot-starter.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/sipankaj/remote-config-spring-boot-starter.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>sipankaj</id>
+            <name>Pankaj Singh</name>
+            <email>pankajsingh.nitb@gmail.com</email>
+            <url>https://github.com/sipankaj</url>
+        </developer>
+    </developers>
+
+    <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <name>OSSRH Releases</name>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <name>OSSRH Snapshots</name>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <profiles>
         <profile>
             <id>release</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
             <build>
                 <plugins>
                     <!-- GPG signing -->
@@ -128,9 +165,7 @@
                             <execution>
                                 <id>sign-artifacts</id>
                                 <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
+                                <goals><goal>sign</goal></goals>
                             </execution>
                         </executions>
                     </plugin>
@@ -143,9 +178,7 @@
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
+                                <goals><goal>jar</goal></goals>
                             </execution>
                         </executions>
                     </plugin>
@@ -158,12 +191,12 @@
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
+                                <goals><goal>jar</goal></goals>
                             </execution>
                         </executions>
                     </plugin>
+
+                    <!-- Central publishing plugin -->
                     <plugin>
                         <groupId>org.sonatype.central</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>
@@ -177,5 +210,4 @@
             </build>
         </profile>
     </profiles>
-
 </project>
