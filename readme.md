@@ -24,6 +24,12 @@ This library lets your Spring Boot application securely and dynamically load `.y
 
 ---
 
+## 🚀 Prerequisites
+- Java 17 or higher
+- Spring Boot 3.x
+- Maven 3.6+ (for dependency management)
+- Network access to external secret managers (if used)
+
 ## ⚙️ How to Use
 
 ### 1️⃣ Add Dependency
